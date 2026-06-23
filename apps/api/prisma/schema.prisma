@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Theme {
+  html
+  css
+  javascript
+  php
+  sql
+}
+
+enum Niveau {
+  facile
+  moyen
+  difficile
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  nom           String         @db.VarChar(100)
+  email         String         @unique @db.VarChar(255)
+  password      String         @db.VarChar(255)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  refreshTokens RefreshToken[]
+  scores        Score[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique @db.VarChar(512)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
+}
+
+model Question {
+  id          Int    @id @default(autoincrement())
+  theme       Theme
+  niveau      Niveau
+  question    String @db.Text
+  rep1        String @db.Text
+  rep2        String @db.Text
+  rep3        String @db.Text
+  rep4        String @db.Text
+  repCorrecte Int
+  explication String @db.Text
+
+  @@map("questions")
+}
+
+model Score {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme     Theme
+  niveau    Niveau
+  points    Int
+  total     Int
+  createdAt DateTime @default(now())
+
+  @@map("scores")
+}

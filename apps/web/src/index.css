@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Raleway", system-ui, sans-serif;
+  --color-primary: #1a1a2e;
+  --color-surface: #16213e;
+  --color-accent: #e94560;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-primary);
+    color: #ffffff;
+    margin: 0;
+  }
+}
