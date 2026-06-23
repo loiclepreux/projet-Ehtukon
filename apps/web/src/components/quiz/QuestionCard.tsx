@@ -1,5 +1,4 @@
 import type { Question } from '@ehtukon/shared';
-import { cn } from '../../lib/utils';
 
 interface Props {
   question: Question;
@@ -12,31 +11,37 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, showResult }:
   const answers = [question.rep1, question.rep2, question.rep3, question.rep4];
 
   return (
-    <div className="flex flex-col gap-6">
-      <p className="text-lg font-semibold text-white leading-relaxed">{question.question}</p>
+    <div className="flex flex-col gap-4">
+      <div
+        className="rounded border text-center text-lg font-semibold p-3"
+        style={{ backgroundColor: 'rgb(168,163,163)', border: '1px solid black', color: 'black' }}
+      >
+        {question.question}
+      </div>
 
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
         {answers.map((answer, index) => {
           const answerIndex = index + 1;
           const isSelected = selectedAnswer === answerIndex;
           const isCorrect = question.repCorrecte === answerIndex;
+
+          let bg = 'rgb(168,163,163)';
+          let color = 'black';
+          if (showResult && isCorrect) { bg = 'rgb(127,255,170)'; }
+          else if (showResult && isSelected && !isCorrect) { bg = 'rgb(228,79,79)'; }
+          else if (showResult) { bg = 'rgb(200,195,195)'; color = '#666'; }
 
           return (
             <button
               key={index}
               onClick={() => onAnswer(answerIndex)}
               disabled={showResult}
-              className={cn(
-                'w-full p-4 rounded-xl border text-left text-sm font-medium transition-all',
-                !showResult && 'hover:border-[#e94560] hover:bg-[#e94560]/10 border-white/10 bg-white/5 text-white',
-                showResult && isCorrect && 'border-green-500 bg-green-500/20 text-green-300',
-                showResult && isSelected && !isCorrect && 'border-red-500 bg-red-500/20 text-red-300',
-                showResult && !isSelected && !isCorrect && 'border-white/5 bg-white/3 text-white/40',
-              )}
+              className="p-3 rounded border text-left font-medium cursor-pointer transition-colors"
+              style={{ backgroundColor: bg, color, border: '1px solid black', opacity: showResult && !isSelected && !isCorrect ? 0.6 : 1 }}
+              onMouseOver={e => { if (!showResult) e.currentTarget.style.backgroundColor = 'rgb(128,123,123)'; }}
+              onMouseOut={e => { if (!showResult) e.currentTarget.style.backgroundColor = 'rgb(168,163,163)'; }}
             >
-              <span className="mr-3 font-bold text-[#e94560]">
-                {String.fromCharCode(65 + index)}.
-              </span>
+              <span className="font-bold mr-2">{String.fromCharCode(65 + index)}.</span>
               {answer}
             </button>
           );

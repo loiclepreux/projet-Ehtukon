@@ -1,52 +1,80 @@
 import { Link } from 'react-router-dom';
-import { useUiStore } from '../store/uiStore';
 import { useAuthStore } from '../store/authStore';
+import { useUiStore } from '../store/uiStore';
+
+const btnStyle: React.CSSProperties = {
+  backgroundColor: '#95acc4', border: '2px solid #4d4b4b',
+  borderRadius: '8px', padding: '12px 32px', fontWeight: 'bold',
+  fontSize: '1.1rem', cursor: 'pointer', fontFamily: 'Raleway, sans-serif',
+  textDecoration: 'none', color: 'black', display: 'inline-block',
+  letterSpacing: '0.05em', transition: 'background-color 0.2s, box-shadow 0.2s',
+};
 
 export function HomePage() {
   const { isAuthenticated } = useAuthStore();
   const openAuthModal = useUiStore((s) => s.openAuthModal);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center">
-      <h1 className="text-6xl font-extrabold text-white mb-4 tracking-tight">
-        <span className="text-[#e94560]">Ehtukon</span>
-      </h1>
-      <p className="text-xl text-white/60 max-w-2xl mb-4">
-        La plateforme de quiz qui te fait progresser en programmation.
+    <div style={{ fontFamily: 'Raleway, sans-serif' }}>
+      <p className="text-xl mb-4">
+        🎮 <span className="font-bold underline" style={{ letterSpacing: '0.04em' }}>Présentation – Bienvenue dans l'univers d'Ehtukon.</span>
       </p>
-      <p className="text-white/40 max-w-xl mb-10 leading-relaxed">
-        HTML · CSS · JavaScript · PHP · SQL — 3 niveaux de difficulté, des centaines de questions,
-        un classement mondial. Apprends en t'amusant.
+      <p className="text-lg leading-relaxed text-justify mb-4" style={{ color: '#222' }}>
+        <span className="font-bold">Ehtukon</span>, c'est bien plus qu'un simple quiz : c'est une aventure interactive
+        dédiée à tous ceux qui veulent apprendre, réviser ou tester leurs connaissances en programmation... tout en s'amusant !
+      </p>
+      <p className="text-lg leading-relaxed text-justify mb-4" style={{ color: '#222' }}>
+        Pensé comme un jeu, Ehtukon te plonge dans un univers ludique où chaque bonne réponse te rapproche du titre de
+        <span className="font-bold"> Maître du Code</span>. Que tu sois débutant curieux, passionné autodidacte ou
+        développeur confirmé, tu trouveras ici de quoi stimuler ton cerveau et relever des défis amusants à travers
+        des centaines de questions réparties sur différents langages et concepts.
+      </p>
+      <p className="text-lg leading-relaxed text-justify mb-4" style={{ color: '#222' }}>
+        Tu aimes le <span className="font-bold">HTML</span> et le <span className="font-bold">CSS</span> ? Tu veux
+        maîtriser <span className="font-bold">JavaScript</span>, <span className="font-bold">PHP</span> ou encore{' '}
+        <span className="font-bold">SQL</span> ? Parfait ! Ehtukon te propose des questionnaires variés, allant des
+        bases jusqu'aux notions avancées, sous forme de QCM. Chaque module a été conçu pour t'apporter à la fois
+        apprentissage, challenge et fun.
+      </p>
+      <p className="text-lg leading-relaxed text-justify mb-4" style={{ color: '#222' }}>
+        Le but ? T'amuser tout en consolidant tes compétences, et te comparer à la communauté ! Avec un système de
+        points et de classements, tu progresses à ton rythme, selon tes envies.
+      </p>
+      <p className="text-lg leading-relaxed text-justify mb-6" style={{ color: '#222' }}>
+        Alors n'attends plus ! Lance ta première partie, choisis ton langage, et laisse-toi embarquer dans cette
+        expérience unique où <span className="font-bold">le code devient un jeu</span>. 🚀
       </p>
 
-      <div className="flex gap-4">
-        <Link
-          to="/jouer"
-          className="px-8 py-4 rounded-xl bg-[#e94560] text-white font-bold text-lg hover:bg-[#c73652] transition-colors shadow-lg shadow-[#e94560]/20"
-        >
-          Commencer à jouer
-        </Link>
-        {!isAuthenticated && (
-          <button
-            onClick={() => openAuthModal('register')}
-            className="px-8 py-4 rounded-xl border border-white/20 text-white font-bold text-lg hover:bg-white/5 transition-colors"
+      <div className="flex justify-center gap-4 flex-wrap mt-4">
+        {isAuthenticated ? (
+          <Link
+            to="/jouer"
+            style={btnStyle}
+            onMouseOver={e => { e.currentTarget.style.backgroundColor = '#ce5867'; e.currentTarget.style.boxShadow = '0 0 14px rgba(206,88,103,0.7)'; }}
+            onMouseOut={e => { e.currentTarget.style.backgroundColor = '#95acc4'; e.currentTarget.style.boxShadow = 'none'; }}
           >
-            Créer un compte
-          </button>
+            🎮 Commencer à jouer
+          </Link>
+        ) : (
+          <>
+            <button
+              onClick={() => openAuthModal('login')}
+              style={btnStyle}
+              onMouseOver={e => { e.currentTarget.style.backgroundColor = '#ce5867'; e.currentTarget.style.boxShadow = '0 0 14px rgba(206,88,103,0.7)'; }}
+              onMouseOut={e => { e.currentTarget.style.backgroundColor = '#95acc4'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              🔑 Se connecter pour jouer
+            </button>
+            <button
+              onClick={() => openAuthModal('register')}
+              style={{ ...btnStyle, backgroundColor: '#f1eddf' }}
+              onMouseOver={e => { e.currentTarget.style.backgroundColor = '#ce5867'; e.currentTarget.style.boxShadow = '0 0 14px rgba(206,88,103,0.7)'; }}
+              onMouseOut={e => { e.currentTarget.style.backgroundColor = '#f1eddf'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              ✏️ Créer un compte
+            </button>
+          </>
         )}
-      </div>
-
-      <div className="grid grid-cols-3 gap-8 mt-20 max-w-2xl w-full">
-        {[
-          { label: '5 langages', desc: 'HTML, CSS, JS, PHP, SQL' },
-          { label: '3 niveaux', desc: 'Facile, Moyen, Difficile' },
-          { label: 'Classements', desc: 'Compare-toi aux autres' },
-        ].map(({ label, desc }) => (
-          <div key={label} className="bg-[#16213e] rounded-xl p-6 border border-white/5">
-            <p className="text-2xl font-bold text-[#e94560] mb-1">{label}</p>
-            <p className="text-white/50 text-sm">{desc}</p>
-          </div>
-        ))}
       </div>
     </div>
   );

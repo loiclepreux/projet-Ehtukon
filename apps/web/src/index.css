@@ -2,9 +2,20 @@
 
 @theme {
   --font-sans: "Raleway", system-ui, sans-serif;
-  --color-primary: #1a1a2e;
-  --color-surface: #16213e;
-  --color-accent: #e94560;
+  --color-primary: #95acc4;
+  --color-accent: #ce5867;
+  --color-content: #f1eddf;
+  --color-border: #4d4b4b;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(149,172,196,0.3), 0 0 20px rgba(149,172,196,0.1); }
+  50%       { box-shadow: 0 0 18px rgba(149,172,196,0.7), 0 0 40px rgba(149,172,196,0.3); }
+}
+
+@keyframes bar-glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(149,172,196,0.5); }
+  50%       { box-shadow: 0 0 14px rgba(149,172,196,1); }
 }
 
 @layer base {
@@ -13,8 +24,25 @@
   }
   body {
     font-family: var(--font-sans);
-    background-color: var(--color-primary);
-    color: #ffffff;
+    background-image: url('/fond.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     margin: 0;
+    min-height: 100vh;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,0.04) 3px,
+      rgba(0,0,0,0.04) 4px
+    );
+    pointer-events: none;
+    z-index: 9998;
   }
 }

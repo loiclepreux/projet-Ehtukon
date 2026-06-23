@@ -6,11 +6,12 @@ import { Theme, Niveau } from '@ehtukon/shared';
 
 type QuizState = 'idle' | 'playing' | 'answered' | 'complete';
 
-export function useQuestions(theme: Theme, niveau: Niveau) {
+export function useQuestions(theme: Theme, niveau: Niveau, enabled = true) {
   return useQuery({
     queryKey: ['questions', theme, niveau],
     queryFn: () =>
       api.get<Question[]>('/questions', { params: { theme, niveau } }).then((r) => r.data),
+    enabled,
   });
 }
 

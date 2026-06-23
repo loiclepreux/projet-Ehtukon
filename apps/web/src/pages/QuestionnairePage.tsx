@@ -1,4 +1,4 @@
-import { useSearchParams, Navigate } from 'react-router-dom';
+import { useSearchParams, Navigate, Link } from 'react-router-dom';
 import { Theme, Niveau } from '@ehtukon/shared';
 import { useQuestions, useSubmitScore, useQuizEngine } from '../hooks/useQuiz';
 import { QuestionCard } from '../components/quiz/QuestionCard';
@@ -6,6 +6,18 @@ import { ExplicationPanel } from '../components/quiz/ExplicationPanel';
 import { QuizResult } from '../components/quiz/QuizResult';
 import { useAuthStore } from '../store/authStore';
 import { useEffect } from 'react';
+
+const NIVEAU_LABELS: Record<Niveau, string> = {
+  [Niveau.FACILE]: 'Facile',
+  [Niveau.MOYEN]: 'Moyen',
+  [Niveau.DIFFICILE]: 'Difficile',
+};
+
+const btnStyle: React.CSSProperties = {
+  backgroundColor: '#95acc4', border: '2px solid #4d4b4b',
+  borderRadius: '8px', padding: '8px 20px', fontWeight: 'bold',
+  cursor: 'pointer', fontFamily: 'Raleway, sans-serif',
+};
 
 export function QuestionnairePage() {
   const [params] = useSearchParams();
@@ -15,65 +27,78 @@ export function QuestionnairePage() {
 
   const validThemes = Object.values(Theme) as string[];
   const validNiveaux = Object.values(Niveau) as string[];
-  if (!theme || !niveau || !validThemes.includes(theme) || !validNiveaux.includes(niveau)) {
-    return <Navigate to="/jouer" replace />;
-  }
+  const isValidParams = !!(theme && niveau && validThemes.includes(theme) && validNiveaux.includes(niveau));
 
-  const { data: questions, isLoading, error } = useQuestions(theme, niveau);
+  // All hooks must be called unconditionally — guard returns come after
+  const { data: questions, isLoading, error } = useQuestions(
+    (theme ?? '') as Theme,
+    (niveau ?? '') as Niveau,
+    isValidParams && isAuthenticated,
+  );
   const submitScore = useSubmitScore();
   const quiz = useQuizEngine(questions ?? []);
 
   useEffect(() => {
-    if (questions && questions.length > 0 && quiz.state === 'idle') {
-      quiz.start();
-    }
+    if (questions && questions.length > 0 && quiz.state === 'idle') quiz.start();
   }, [questions]);
 
   useEffect(() => {
-    if (quiz.state === 'complete' && isAuthenticated) {
-      submitScore.mutate({ theme, niveau, points: quiz.score, total: questions!.length });
+    if (quiz.state === 'complete' && isAuthenticated && questions?.length) {
+      submitScore.mutate({ theme, niveau, points: quiz.score, total: questions.length });
     }
   }, [quiz.state]);
 
+  if (!isValidParams) return <Navigate to="/jouer" replace />;
+  if (!isAuthenticated) return <Navigate to="/" replace />;
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-white/50 text-lg animate-pulse">Chargement des questions...</div>
+      <div className="text-center py-12">
+        <p className="text-xl animate-pulse" style={{ color: '#333' }}>Chargement des questions...</p>
       </div>
     );
   }
 
   if (error || !questions?.length) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-red-400">Impossible de charger les questions. Réessayez plus tard.</p>
+      <div className="text-center py-12">
+        <p className="text-red-600 text-lg">Impossible de charger les questions.</p>
+        <Link to="/jouer" style={btnStyle} className="inline-block mt-4 no-underline text-black">
+          ← Retour
+        </Link>
       </div>
     );
   }
 
   if (quiz.state === 'complete') {
-    return (
-      <div className="max-w-2xl mx-auto px-6 py-12">
-        <QuizResult score={quiz.score} total={questions.length} theme={theme} niveau={niveau} />
-      </div>
-    );
+    return <QuizResult score={quiz.score} total={questions.length} theme={theme} niveau={niveau} />;
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
-      <div className="flex items-center justify-between mb-6">
-        <span className="text-white/40 text-sm capitalize">
-          {theme} · {niveau}
-        </span>
-        <span className="text-white/60 text-sm font-medium">
-          {quiz.currentIndex + 1} / {questions.length}
-        </span>
-      </div>
+    <div className="flex flex-col" style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <h2
+        className="text-center font-bold border-2 rounded-xl mx-auto mb-4 w-full sm:w-4/5"
+        style={{ borderColor: '#4d4b4b', backgroundColor: 'rgb(168,163,163)', padding: '10px', fontSize: 'clamp(1rem, 4vw, 26px)', color: 'black' }}
+      >
+        {theme.toUpperCase()} — {NIVEAU_LABELS[niveau]}
+      </h2>
 
-      <div className="w-full bg-white/10 rounded-full h-1 mb-8">
+      <h3
+        className="text-center border rounded mx-auto mb-4 w-1/2 sm:w-1/3 md:w-1/4"
+        style={{ borderColor: 'black', backgroundColor: 'rgb(168,163,163)', padding: '8px', fontSize: '20px', color: 'black', borderRadius: '5px' }}
+      >
+        Question {quiz.currentIndex + 1}/{questions.length}
+      </h3>
+
+      <div className="w-full rounded-full h-2 mb-6" style={{ backgroundColor: '#ddd' }}>
         <div
-          className="bg-[#e94560] h-1 rounded-full transition-all"
-          style={{ width: `${((quiz.currentIndex + 1) / questions.length) * 100}%` }}
+          className="h-2 rounded-full"
+          style={{
+            width: `${((quiz.currentIndex + 1) / questions.length) * 100}%`,
+            backgroundColor: '#95acc4',
+            transition: 'width 0.4s ease',
+            animation: 'bar-glow 2s ease-in-out infinite',
+          }}
         />
       </div>
 
@@ -92,12 +117,16 @@ export function QuestionnairePage() {
                 explication={quiz.currentQuestion.explication}
                 isCorrect={quiz.selected === quiz.currentQuestion.repCorrecte}
               />
-              <button
-                onClick={quiz.next}
-                className="mt-6 w-full py-3 rounded-xl bg-[#e94560] text-white font-semibold hover:bg-[#c73652] transition-colors"
-              >
-                {quiz.isLast ? 'Voir les résultats' : 'Question suivante →'}
-              </button>
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={quiz.next}
+                  style={{ ...btnStyle, color: 'black' }}
+                  onMouseOver={e => (e.currentTarget.style.backgroundColor = '#ce5867')}
+                  onMouseOut={e => (e.currentTarget.style.backgroundColor = '#95acc4')}
+                >
+                  {quiz.isLast ? 'Voir les résultats →' : 'Question suivante →'}
+                </button>
+              </div>
             </>
           )}
         </>

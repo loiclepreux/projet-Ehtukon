@@ -3,11 +3,19 @@ import { ThemeCard } from '../components/quiz/ThemeCard';
 
 export function JouerPage() {
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
-      <h1 className="text-4xl font-extrabold text-white mb-2">Choisissez un quiz</h1>
-      <p className="text-white/50 mb-10">Sélectionnez un langage et un niveau de difficulté</p>
+    <div>
+      <h2
+        className="text-center font-bold mb-8 pb-3 mx-auto"
+        style={{
+          borderBottom: '2px solid #4d4b4b',
+          fontSize: 'clamp(1.2rem, 4vw, 2rem)', color: '#333',
+          width: '75%',
+        }}
+      >
+        Choisissez votre questionnaire
+      </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {Object.values(Theme).map((theme) => (
           <ThemeCard key={theme} theme={theme} />
         ))}
