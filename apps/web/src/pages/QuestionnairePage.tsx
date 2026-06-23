@@ -5,7 +5,7 @@ import { QuestionCard } from '../components/quiz/QuestionCard';
 import { ExplicationPanel } from '../components/quiz/ExplicationPanel';
 import { QuizResult } from '../components/quiz/QuizResult';
 import { useAuthStore } from '../store/authStore';
-import { useEffect } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 
 const NIVEAU_LABELS: Record<Niveau, string> = {
   [Niveau.FACILE]: 'Facile',
@@ -13,7 +13,7 @@ const NIVEAU_LABELS: Record<Niveau, string> = {
   [Niveau.DIFFICILE]: 'Difficile',
 };
 
-const btnStyle: React.CSSProperties = {
+const btnStyle: CSSProperties = {
   backgroundColor: '#95acc4', border: '2px solid #4d4b4b',
   borderRadius: '8px', padding: '8px 20px', fontWeight: 'bold',
   cursor: 'pointer', fontFamily: 'Raleway, sans-serif',
@@ -37,13 +37,15 @@ export function QuestionnairePage() {
   );
   const submitScore = useSubmitScore();
   const quiz = useQuizEngine(questions ?? []);
+  const hasSubmitted = useRef(false);
 
   useEffect(() => {
     if (questions && questions.length > 0 && quiz.state === 'idle') quiz.start();
   }, [questions]);
 
   useEffect(() => {
-    if (quiz.state === 'complete' && isAuthenticated && questions?.length) {
+    if (quiz.state === 'complete' && isAuthenticated && questions?.length && !hasSubmitted.current) {
+      hasSubmitted.current = true;
       submitScore.mutate({ theme, niveau, points: quiz.score, total: questions.length });
     }
   }, [quiz.state]);

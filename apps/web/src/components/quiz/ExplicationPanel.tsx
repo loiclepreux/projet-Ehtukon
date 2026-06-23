@@ -15,7 +15,7 @@ export function ExplicationPanel({ explication, isCorrect }: Props) {
       }}
     >
       <p className="font-bold mb-1">{isCorrect ? '✓ Bonne réponse !' : '✗ Mauvaise réponse'}</p>
-      <p className="text-sm">{explication}</p>
+      {explication && <p className="text-sm">{explication}</p>}
     </div>
   );
 }

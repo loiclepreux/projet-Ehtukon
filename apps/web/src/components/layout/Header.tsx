@@ -1,24 +1,25 @@
+import { type CSSProperties, type MouseEvent, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { useUiStore } from '../../store/uiStore';
 import { useLogout } from '../../hooks/useAuth';
 
 const NAV_BTN_BASE = "px-4 py-1 font-bold rounded border-2 cursor-pointer no-underline text-black";
-const NAV_BTN_STYLE: React.CSSProperties = {
+const NAV_BTN_STYLE: CSSProperties = {
   backgroundColor: '#f8fafc', borderColor: '#4d4b4b',
   fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(4px, 5vw, 15px)',
 };
 
-const hoverOn = (e: React.MouseEvent<HTMLElement>) => {
+const hoverOn = (e: MouseEvent<HTMLElement>) => {
   e.currentTarget.style.backgroundColor = '#ce5867';
   e.currentTarget.style.boxShadow = '0 0 10px rgba(206,88,103,0.8), 0 0 20px rgba(206,88,103,0.4)';
 };
-const hoverOff = (e: React.MouseEvent<HTMLElement>) => {
+const hoverOff = (e: MouseEvent<HTMLElement>) => {
   e.currentTarget.style.backgroundColor = '#f8fafc';
   e.currentTarget.style.boxShadow = 'none';
 };
 
-function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
+function NavLink({ to, children }: { to: string; children: ReactNode }) {
   return (
     <Link
       to={to}
@@ -32,7 +33,7 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
   );
 }
 
-function NavButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+function NavButton({ onClick, children }: { onClick: () => void; children: ReactNode }) {
   return (
     <button
       onClick={onClick}
@@ -82,7 +83,10 @@ export function Header() {
       <nav className="w-full flex justify-around py-3 px-4 flex-wrap gap-2">
         {isAuthenticated ? (
           <NavButton onClick={() => logout.mutate()}>
-            {user?.nom} — Déconnexion
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'inline-block' }}>{user?.nom}</span>
+              <span>— Déconnexion</span>
+            </span>
           </NavButton>
         ) : (
           !isHome && !isJouer && !isScores && (

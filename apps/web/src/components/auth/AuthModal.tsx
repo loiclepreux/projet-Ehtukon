@@ -3,7 +3,7 @@ import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';
 
 export function AuthModal() {
-  const { isAuthModalOpen, authTab, closeAuthModal } = useUiStore();
+  const { isAuthModalOpen, authTab, openAuthModal, closeAuthModal } = useUiStore();
 
   if (!isAuthModalOpen) return null;
 
@@ -34,9 +34,31 @@ export function AuthModal() {
             {authTab === 'login' ? 'Connexion' : 'Créer un compte'}
           </h2>
           {authTab === 'login' ? (
-            <LoginForm onSuccess={closeAuthModal} />
+            <>
+              <LoginForm onSuccess={closeAuthModal} />
+              <p className="text-center text-sm mt-4" style={{ color: '#aaa' }}>
+                Pas encore de compte ?{' '}
+                <button
+                  onClick={() => openAuthModal('register')}
+                  style={{ color: '#95acc4', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontSize: 'inherit' }}
+                >
+                  S'inscrire
+                </button>
+              </p>
+            </>
           ) : (
-            <RegisterForm onSuccess={closeAuthModal} />
+            <>
+              <RegisterForm onSuccess={closeAuthModal} />
+              <p className="text-center text-sm mt-4" style={{ color: '#aaa' }}>
+                Déjà un compte ?{' '}
+                <button
+                  onClick={() => openAuthModal('login')}
+                  style={{ color: '#95acc4', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontSize: 'inherit' }}
+                >
+                  Se connecter
+                </button>
+              </p>
+            </>
           )}
         </div>
       </div>

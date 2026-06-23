@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { Theme, Niveau } from '@ehtukon/shared';
 import { useLeaderboard } from '../hooks/useScores';
 
@@ -67,7 +67,7 @@ function LeaderboardPanel({ theme, niveau }: { theme: Theme; niveau: Niveau }) {
   );
 }
 
-const carouselBtnStyle: React.CSSProperties = {
+const carouselBtnStyle: CSSProperties = {
   backgroundColor: '#95acc4', color: 'black', border: '2px solid #4d4b4b',
   width: '44px', height: '44px', fontSize: '24px', lineHeight: '1',
   borderRadius: '8px', cursor: 'pointer', flexShrink: 0,
