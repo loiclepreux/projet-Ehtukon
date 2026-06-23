@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import api from '../lib/axios';
 import { useAuthStore } from '../store/authStore';
-import { AuthResponse } from '@ehtukon/shared';
+import type { AuthResponse } from '@ehtukon/shared';
 
 export function useLogin() {
   const setAuth = useAuthStore((s) => s.setAuth);

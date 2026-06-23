@@ -2,8 +2,9 @@
   "name": "ehtukon",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "turbo dev --filter=@ehtukon/api --filter=@ehtukon/web",
     "build": "turbo build",
     "lint": "turbo lint",
     "migrate:legacy": "tsx scripts/migrate-legacy.ts"

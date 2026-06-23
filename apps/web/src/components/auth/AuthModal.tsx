@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useUiStore } from '../../store/uiStore';
 import { LoginForm } from './LoginForm';
@@ -7,6 +7,10 @@ import { RegisterForm } from './RegisterForm';
 export function AuthModal() {
   const { isAuthModalOpen, authTab, closeAuthModal } = useUiStore();
   const [tab, setTab] = useState<'login' | 'register'>(authTab);
+
+  useEffect(() => {
+    if (isAuthModalOpen) setTab(authTab);
+  }, [isAuthModalOpen, authTab]);
 
   if (!isAuthModalOpen) return null;
 

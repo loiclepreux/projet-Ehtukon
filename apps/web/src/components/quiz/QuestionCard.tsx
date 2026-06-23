@@ -1,4 +1,4 @@
-import { Question } from '@ehtukon/shared';
+import type { Question } from '@ehtukon/shared';
 import { cn } from '../../lib/utils';
 
 interface Props {

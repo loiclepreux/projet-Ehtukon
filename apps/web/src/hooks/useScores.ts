@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../lib/axios';
-import { LeaderboardResponse, Theme, Niveau } from '@ehtukon/shared';
+import type { LeaderboardResponse } from '@ehtukon/shared';
+import { Theme, Niveau } from '@ehtukon/shared';
 
 export function useLeaderboard(theme: Theme, niveau: Niveau) {
   return useQuery({

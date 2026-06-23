@@ -1,7 +1,8 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useState, useCallback } from 'react';
 import api from '../lib/axios';
-import { Question, Theme, Niveau, SubmitScoreDto } from '@ehtukon/shared';
+import type { Question, SubmitScoreDto } from '@ehtukon/shared';
+import { Theme, Niveau } from '@ehtukon/shared';
 
 type QuizState = 'idle' | 'playing' | 'answered' | 'complete';
 

@@ -1,4 +1,4 @@
 export * from './types/enums';
-export * from './types/user.types';
-export * from './types/quiz.types';
-export * from './types/score.types';
+export type { User, AuthTokens, AuthResponse } from './types/user.types';
+export type { Question, QuestionPublic, SubmitScoreDto } from './types/quiz.types';
+export type { Score, LeaderboardEntry, LeaderboardResponse } from './types/score.types';

@@ -6,16 +6,15 @@ RUN npm install -g pnpm
 
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 COPY packages/shared/package.json ./packages/shared/
-COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
 
 RUN pnpm install --frozen-lockfile
 
 COPY packages/shared ./packages/shared
-COPY apps/api ./apps/api
+COPY apps/web ./apps/web
 
-WORKDIR /app/apps/api
-RUN pnpm run prisma:generate
+WORKDIR /app/apps/web
 
-EXPOSE 3001
+EXPOSE 5173
 
-CMD ["pnpm", "dev"]
+CMD ["pnpm", "dev", "--host"]
