@@ -66,12 +66,7 @@ export function QuestionnairePage() {
             !hasSubmitted.current
         ) {
             hasSubmitted.current = true;
-            submitScore.mutate({
-                theme,
-                niveau,
-                points: quiz.score,
-                total: questions.length,
-            });
+            submitScore.mutate({ theme, niveau, answers: quiz.answers });
         }
     }, [quiz.state, isAuthenticated]);
 
@@ -174,18 +169,16 @@ export function QuestionnairePage() {
                     <QuestionCard
                         question={quiz.currentQuestion}
                         selectedAnswer={quiz.selected}
+                        correctAnswer={quiz.result?.repCorrecte ?? null}
                         onAnswer={quiz.answer}
                         showResult={quiz.state === "answered"}
                     />
 
-                    {quiz.state === "answered" && (
+                    {quiz.state === "answered" && quiz.result && (
                         <>
                             <ExplicationPanel
-                                explication={quiz.currentQuestion.explication}
-                                isCorrect={
-                                    quiz.selected ===
-                                    quiz.currentQuestion.repCorrecte
-                                }
+                                explication={quiz.result.explication}
+                                isCorrect={quiz.result.correct}
                             />
                             <div className="flex justify-end mt-4">
                                 <button

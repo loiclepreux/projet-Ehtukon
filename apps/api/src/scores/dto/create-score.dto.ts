@@ -1,4 +1,14 @@
-import { IsEnum, IsInt, Min, Max } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
+  IsEnum,
+  IsInt,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 
 export enum Theme {
   html = 'html',
@@ -14,6 +24,16 @@ export enum Niveau {
   difficile = 'difficile',
 }
 
+export class AnswerDto {
+  @IsInt()
+  questionId: number;
+
+  @IsInt()
+  @Min(1)
+  @Max(4)
+  answer: number;
+}
+
 export class CreateScoreDto {
   @IsEnum(Theme)
   theme: Theme;
@@ -21,12 +41,10 @@ export class CreateScoreDto {
   @IsEnum(Niveau)
   niveau: Niveau;
 
-  @IsInt()
-  @Min(0)
-  points: number;
-
-  @IsInt()
-  @Min(1)
-  @Max(100)
-  total: number;
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  @ValidateNested({ each: true })
+  @Type(() => AnswerDto)
+  answers: AnswerDto[];
 }
