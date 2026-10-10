@@ -2,9 +2,11 @@ import { Outlet } from "react-router-dom";
 import { Header } from "./Header";
 import { AuthModal } from "../auth/AuthModal";
 import { useAuthInit } from "../../hooks/useAuth";
+import { useUiStore } from "../../store/uiStore";
 
 export function Layout() {
     useAuthInit();
+    const isServerWaking = useUiStore((s) => s.isServerWaking);
     return (
         <div className="w-full flex flex-col min-h-screen">
             <Header />
@@ -47,6 +49,15 @@ export function Layout() {
                 </p>
             </footer>
             <AuthModal />
+            {isServerWaking && (
+                <div
+                    role="status"
+                    className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-xl border-2 border-border bg-content px-5 py-3 text-center text-sm font-semibold text-black shadow-[4px_4px_0_#4d4b4b]"
+                >
+                    ⏳ Le serveur se réveille… La première connexion peut
+                    prendre jusqu'à 50 secondes.
+                </div>
+            )}
         </div>
     );
 }
