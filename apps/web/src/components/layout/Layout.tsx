@@ -9,7 +9,7 @@ export function Layout() {
         <div className="w-full flex flex-col min-h-screen">
             <Header />
             <main
-                className="w-[60%] mx-auto mt-6 mb-8 rounded-2xl border-2 p-4 sm:p-6"
+                className="mx-auto mt-6 mb-8 w-[calc(100%-2rem)] max-w-5xl rounded-2xl border-2 p-5 sm:p-8"
                 style={{
                     backgroundColor: "#f1eddf",
                     borderColor: "#4d4b4b",
@@ -19,16 +19,31 @@ export function Layout() {
             >
                 <Outlet />
             </main>
-            <footer className="text-center text-lg mt-auto pb-6">
-                <p style={{ margin: "5px 0" }}>
-                    © 2025{" "}
-                    <strong style={{ color: "#95acc4", fontWeight: 600 }}>
-                        Ehtukon?
-                    </strong>{" "}
-                    - Le code, mais en fun 🎮
+            <footer className="mt-auto pb-6 text-center text-sm text-[#333]">
+                <p className="my-1">
+                    © {new Date().getFullYear()}{" "}
+                    <strong className="text-primary">Ehtukon?</strong> · Le
+                    code, mais en fun 🎮
                 </p>
-                <p style={{ margin: "5px 0" }}>
-                    Développé avec ❤️ pour les passionnés de programmation
+                <p className="my-1">
+                    Réalisé par{" "}
+                    <a
+                        href="https://loic-lepreux.com"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-semibold text-accent"
+                    >
+                        Loïc Lepreux
+                    </a>{" "}
+                    ·{" "}
+                    <a
+                        href="https://github.com/loiclepreux/projet-ehtukon"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-semibold text-accent"
+                    >
+                        Code source
+                    </a>
                 </p>
             </footer>
             <AuthModal />

@@ -10,7 +10,7 @@ const NAV_BTN_STYLE: CSSProperties = {
     backgroundColor: "#f8fafc",
     borderColor: "#4d4b4b",
     fontFamily: "Raleway, sans-serif",
-    fontSize: "clamp(4px, 5vw, 15px)",
+    fontSize: "0.95rem",
 };
 
 const hoverOn = (e: MouseEvent<HTMLElement>) => {
