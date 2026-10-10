@@ -1,5 +1,5 @@
 import { Theme, Niveau } from './enums';
-import { User } from './user.types';
+import type { User } from './user.types';
 
 export interface Score {
   id: number;
